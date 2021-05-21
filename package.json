@@ -19,8 +19,8 @@
     "webpack-cli": "^4.7.0"
   },
   "scripts": {
-    "dev:watch": "npx webpack watch --mode development",
-    "dev:prod": "npx webpack watch --mode production",
+    "watch:dev": "npx webpack watch --mode development",
+    "watch:prod": "npx webpack watch --mode production",
     "serve": "npx http-server docs"
   }
 }
