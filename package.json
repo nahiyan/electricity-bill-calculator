@@ -21,6 +21,8 @@
   "scripts": {
     "watch:dev": "npx webpack watch --mode development",
     "watch:prod": "npx webpack watch --mode production",
+    "build:dev": "npx webpack build --mode development",
+    "build:prod": "npx webpack build --mode production",
     "serve": "npx http-server docs"
   }
 }
