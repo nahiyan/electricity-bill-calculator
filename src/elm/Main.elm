@@ -51,7 +51,7 @@ type Msg
 initModel : Model
 initModel =
     { usage = 0
-    , showSettings = True
+    , showSettings = False
     , usageRateMap =
         [ UsageRateMapEntry 50 3.75
         , UsageRateMapEntry 75 4.19
