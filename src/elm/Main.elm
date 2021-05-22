@@ -2,8 +2,8 @@ port module Main exposing (main)
 
 import Bool.Extra exposing (ifElse)
 import Browser exposing (element)
-import Html exposing (Html, button, div, form, h1, h3, hr, i, input, label, p, strong, table, tbody, td, text, th, thead, tr)
-import Html.Attributes exposing (attribute, class, for, id, placeholder, scope, type_, value)
+import Html exposing (Html, button, div, form, h1, h3, hr, i, input, label, table, tbody, td, text, tfoot, th, thead, tr)
+import Html.Attributes exposing (attribute, class, colspan, for, id, placeholder, scope, type_, value)
 import Html.Events exposing (on, onClick, onInput, targetValue)
 import Json.Decode as JsonD
 import Json.Encode as JsonE
@@ -304,18 +304,18 @@ view model =
         , table
             [ class "table table-striped" ]
             [ thead []
-                [ tr []
-                    [ th [ scope "col" ]
+                [ tr [ class "d-flex" ]
+                    [ th [ scope "col", class "col-4" ]
                         [ text "Usage (Units)" ]
-                    , th [ scope "col" ]
+                    , th [ scope "col", class "col-4" ]
                         [ text "Rate (BDT / Unit)" ]
-                    , th [ scope "col" ]
+                    , th [ scope "col", class "col-4" ]
                         [ text "Charge (BDT)" ]
                     ]
                 ]
             , tbody [] billSteps
+            , tfoot [] (List.singleton billSummary)
             ]
-        , billSummary
         ]
 
 
@@ -381,14 +381,14 @@ billFromModel model =
             steps
                 |> List.map
                     (\{ usage, rate } ->
-                        tr []
-                            [ td []
+                        tr [ class "d-flex" ]
+                            [ td [ class "col-4" ]
                                 [ text <| String.fromInt <| usage
                                 ]
-                            , td []
+                            , td [ class "col-4" ]
                                 [ text <| Round.round 2 <| rate
                                 ]
-                            , td []
+                            , td [ class "col-4" ]
                                 [ text <| Round.round 2 <| charge <| UsageRateMapEntry usage rate
                                 ]
                             ]
@@ -403,31 +403,49 @@ billFromModel model =
                 vat =
                     (model.vatPercentage / 100) * subTotal
             in
-            div []
-                [ p
-                    []
-                    [ strong
-                        []
-                        [ text "Sub-total (BDT): " ]
-                    , text <| Round.round 2 <| subTotal
-                    ]
-                , p []
-                    [ strong
-                        []
-                        [ text <| String.concat [ "VAT (", String.fromFloat model.vatPercentage, "%): " ] ]
-                    , text <| Round.round 2 <| vat
-                    ]
-                , p []
-                    [ strong
-                        []
-                        [ text "Demand Charge (BDT): " ]
-                    , text <| Round.round 2 <| model.demandCharge
-                    ]
-                , p []
-                    [ strong
-                        []
-                        [ text "Total (BDT): " ]
-                    , text <| Round.round 2 <| subTotal + vat + model.demandCharge
+            tr
+                [ class "d-flex" ]
+                [ td [ class "col-4" ] []
+                , td
+                    [ colspan 2, class "col-8" ]
+                    [ table
+                        [ class "table table-striped" ]
+                        [ thead []
+                            [ tr [ class "d-flex" ]
+                                [ th
+                                    [ scope "col", class "col-6 ps-0" ]
+                                    [ text "" ]
+                                , th
+                                    [ scope "col", class "col-6" ]
+                                    [ text "Amount (BDT)" ]
+                                ]
+                            ]
+                        , tbody []
+                            [ tr [ class "d-flex" ]
+                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Subtotal" ]
+                                , td [ class "col-6" ] [ text <| Round.round 2 <| subTotal ]
+                                ]
+                            , tr [ class "d-flex" ]
+                                [ td [ class "col-6 ps-0 fw-bold" ]
+                                    [ text <|
+                                        String.concat
+                                            [ "VAT ("
+                                            , String.fromFloat model.vatPercentage
+                                            , "%): "
+                                            ]
+                                    ]
+                                , td [ class "col-6" ] [ text <| Round.round 2 <| vat ]
+                                ]
+                            , tr [ class "d-flex" ]
+                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Demand Charge" ]
+                                , td [ class "col-6" ] [ text <| Round.round 2 <| model.demandCharge ]
+                                ]
+                            , tr [ class "d-flex" ]
+                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Total" ]
+                                , td [ class "col-6 text-success fw-bold" ] [ text <| Round.round 2 <| subTotal + vat + model.demandCharge ]
+                                ]
+                            ]
+                        ]
                     ]
                 ]
     in
