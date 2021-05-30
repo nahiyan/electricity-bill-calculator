@@ -397,11 +397,14 @@ billFromModel model =
         summary : Html Msg
         summary =
             let
-                subTotal =
+                totalUsageCharge =
                     steps |> List.foldl (\step acc -> acc + charge step) 0
 
                 vat =
-                    (model.vatPercentage / 100) * subTotal
+                    (model.vatPercentage / 100) * (totalUsageCharge + model.demandCharge)
+
+                totalCharge =
+                    totalUsageCharge + vat + model.demandCharge
             in
             tr
                 [ class "d-flex" ]
@@ -422,8 +425,12 @@ billFromModel model =
                             ]
                         , tbody []
                             [ tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Subtotal" ]
-                                , td [ class "col-6" ] [ text <| Round.round 2 <| subTotal ]
+                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Usage Charge" ]
+                                , td [ class "col-6" ] [ text <| Round.round 2 <| totalUsageCharge ]
+                                ]
+                            , tr [ class "d-flex" ]
+                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Demand Charge" ]
+                                , td [ class "col-6" ] [ text <| Round.round 2 <| model.demandCharge ]
                                 ]
                             , tr [ class "d-flex" ]
                                 [ td [ class "col-6 ps-0 fw-bold" ]
@@ -437,12 +444,8 @@ billFromModel model =
                                 , td [ class "col-6" ] [ text <| Round.round 2 <| vat ]
                                 ]
                             , tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Demand Charge" ]
-                                , td [ class "col-6" ] [ text <| Round.round 2 <| model.demandCharge ]
-                                ]
-                            , tr [ class "d-flex" ]
                                 [ td [ class "col-6 ps-0 fw-bold" ] [ text "Total" ]
-                                , td [ class "col-6 text-success fw-bold" ] [ text <| Round.round 2 <| subTotal + vat + model.demandCharge ]
+                                , td [ class "col-6 text-success fw-bold" ] [ text <| Round.round 2 <| totalCharge ]
                                 ]
                             ]
                         ]
