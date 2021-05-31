@@ -410,13 +410,13 @@ billFromModel model =
                 [ class "d-flex" ]
                 [ td [ class "col-4" ] []
                 , td
-                    [ colspan 2, class "col-8" ]
+                    [ colspan 2, class "col-8 px-0" ]
                     [ table
                         [ class "table table-striped" ]
                         [ thead []
                             [ tr [ class "d-flex" ]
                                 [ th
-                                    [ scope "col", class "col-6 ps-0" ]
+                                    [ scope "col", class "col-6" ]
                                     [ text "" ]
                                 , th
                                     [ scope "col", class "col-6" ]
@@ -425,15 +425,15 @@ billFromModel model =
                             ]
                         , tbody []
                             [ tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Usage Charge" ]
+                                [ td [ class "col-6 fw-bold" ] [ text "Usage Charge" ]
                                 , td [ class "col-6" ] [ text <| Round.round 2 <| totalUsageCharge ]
                                 ]
                             , tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Demand Charge" ]
+                                [ td [ class "col-6 fw-bold" ] [ text "Demand Charge" ]
                                 , td [ class "col-6" ] [ text <| Round.round 2 <| model.demandCharge ]
                                 ]
                             , tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ]
+                                [ td [ class "col-6 fw-bold" ]
                                     [ text <|
                                         String.concat
                                             [ "VAT ("
@@ -444,7 +444,7 @@ billFromModel model =
                                 , td [ class "col-6" ] [ text <| Round.round 2 <| vat ]
                                 ]
                             , tr [ class "d-flex" ]
-                                [ td [ class "col-6 ps-0 fw-bold" ] [ text "Total" ]
+                                [ td [ class "col-6 fw-bold" ] [ text "Total" ]
                                 , td [ class "col-6 text-success fw-bold" ] [ text <| Round.round 2 <| totalCharge ]
                                 ]
                             ]
